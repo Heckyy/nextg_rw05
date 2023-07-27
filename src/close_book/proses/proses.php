@@ -21,6 +21,11 @@ if (!empty($_POST['proses']) && !empty($_SESSION['id_employee'])) {
 		$next_date_periode->modify("+1 month");
 		$previous_date_periode->modify("-1 month");
 		$next_period = $next_date_periode->format("Y-m");
+		$endDate = $_POST['periode'];
+		$explode_date = explode("-", $endDate);
+		$startDate = $explode_date[0] . "-" . $explode_date[1] . "-" . "01";
+		$period_date = new DateTime($endDate);
+		$period = $period_date->format("Y-m");
 		// $next_periode_fix = date("Y-m", strtotime("+1 month"));
 
 
@@ -35,9 +40,11 @@ if (!empty($_POST['proses']) && !empty($_SESSION['id_employee'])) {
 		$saldo_awal = $result_get_saldo_awal['saldo_awal'];
 		$saldo_akhir = $saldo_awal;
 		// ! Get seluruh tranksasi pada periode saat ini untuk di ambil total pengeluaran dan pemasukan!
-		$query_get_data_transaksi = "SELECT * from tb_cash_receipt_payment where tanggal_bank like '%" . $periode3 . "%'";
+		// $query_get_data_transaksi = "SELECT * from tb_cash_receipt_payment where tanggal like '%" . $periode3 . "%'";
+		$querySelect = "SELECT * from tb_cash_receipt_payment where id_bank='" . $bank . "' AND tanggal_bank BETWEEN '" . $startDate . "' AND'" . $endDate . "'";
 		// $query_get_data_transaksi = "SELECT * from tb_cash_receipt_payment where tanggal like '%" . $date . "%' and id_bank='" . $bank . "'";
-		$result_get_transaksi = $db->selectAll($query_get_data_transaksi);
+
+		$result_get_transaksi = $db->selectAll($querySelect);
 		if (mysqli_num_rows($result_get_transaksi) > 0) {
 			foreach ($result_get_transaksi as $data) {
 				$tipe_dana = $data['type'];
@@ -48,6 +55,9 @@ if (!empty($_POST['proses']) && !empty($_SESSION['id_employee'])) {
 				}
 			}
 		}
+		// echo $saldo_akhir;
+		// die();
+
 
 
 		// INSERT FINAL BALANCE

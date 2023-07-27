@@ -20,7 +20,7 @@ if (mysqli_num_rows($results_get_bank) > 0) {
     $saldo_awal = 0;
 }
 $grandTotal = $saldo_awal;
-$querySelect = "SELECT * from tb_cash_receipt_payment where id_bank='" . $id_bank . "' AND tanggal_bank BETWEEN '" . $startDate . "' AND'" . $endDate . "'";
+$querySelect = "SELECT * from tb_cash_receipt_payment where id_bank='" . $id_bank . "' AND tanggal_bank BETWEEN '" . $startDate . "' AND'" . $endDate . "' AND status='1'";
 // $querySelect = "SELECT * from tb_cash_receipt";
 $results = $db->selectAll($querySelect);
 foreach ($results as $result) {
